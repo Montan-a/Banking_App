@@ -14,6 +14,7 @@ import CustomInput from "./CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -37,15 +38,15 @@ const AuthForm = ({ type }: { type: string }) => {
       //Sign up with Appwrite & create a plaid link token
       setIsLoading(true);
       if (type === "sign-up") {
-        // const newUser = await SignUp(data);
-        // setUser(newUser)
+        const newUser = await signUp(data);
+        setUser(newUser);
       }
       if (type === "sign-in") {
-        // const response = await SignIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
-        // if (response) router.push("/");
+        const response = await signIn({
+          email: data.email,
+          password: data.password,
+        });
+        if (response) router.push("/");
       }
     } catch (error) {
       console.error(error);
@@ -93,13 +94,13 @@ const AuthForm = ({ type }: { type: string }) => {
                   <div className="flex gap-4">
                     <CustomInput
                       control={form.control}
-                      name="firstname"
+                      name="firstName"
                       label="First Name"
                       placeholder="ex: John"
                     />
                     <CustomInput
                       control={form.control}
-                      name="lastname"
+                      name="lastName"
                       label="Last Name"
                       placeholder="ex: Doe"
                     />
