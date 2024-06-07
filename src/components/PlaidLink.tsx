@@ -46,6 +46,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
   };
 
   const { open, ready } = usePlaidLink(config);
+  console.log(ready);
 
   return (
     <>
