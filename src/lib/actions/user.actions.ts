@@ -33,8 +33,8 @@ export const signIn = async ({ email, password }: signInProps) => {
   }
 };
 
-export const signUp = async (userData: SignUpParams) => {
-  const { email, password, firstName, lastName } = userData;
+export const signUp = async ({ password, ...userData }: SignUpParams) => {
+  const { email, firstName, lastName } = userData;
   let newUserAccount;
 
   try {
@@ -68,10 +68,10 @@ export const signUp = async (userData: SignUpParams) => {
       USER_COLLECTION_ID!,
       ID.unique(),
       {
-        ...userData,
         userId: newUserAccount.$id,
         dwollaCustomerId,
         dwollaCustomerUrl,
+        ...userData,
       }
     );
     const session = await account.createEmailPasswordSession(email, password);
@@ -117,7 +117,7 @@ export const createLinkToken = async (user: User) => {
       user: {
         client_user_id: user.$id,
       },
-      client_name: user.name,
+      client_name: `${user.firstName} ${user.lastName}`,
       products: ["auth"] as Products[],
       language: "en",
       country_codes: ["US"] as CountryCode[],
