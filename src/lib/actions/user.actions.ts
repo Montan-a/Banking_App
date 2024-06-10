@@ -16,9 +16,8 @@ import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
 
 const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
-  APP,
   APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
-  APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
+  APPWRITE_BANKS_COLLECTION_ID: BANK_COLLECTION_ID,
 } = process.env;
 
 export const signIn = async ({ email, password }: signInProps) => {
@@ -127,14 +126,13 @@ export const createLinkToken = async (user: User) => {
     return parseStringify({ linkToken: response.data.link_token });
   } catch (error) {}
 };
-
 export const createBankAccount = async ({
   userId,
   bankId,
   accountId,
   accessToken,
   fundingSourceUrl,
-  sharableId,
+  shareableId,
 }: createBankAccountProps) => {
   try {
     const { database } = await createAdminClient();
@@ -143,11 +141,20 @@ export const createBankAccount = async ({
       DATABASE_ID!,
       BANK_COLLECTION_ID!,
       ID.unique(),
-      { userId, bankId, accountId, accessToken, fundingSourceUrl, sharableId }
+      {
+        accessToken,
+        userId,
+        accountId,
+        bankId,
+        fundingSourceUrl,
+        shareableId,
+      }
     );
 
     return parseStringify(bankAccount);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // This function exchanges a public token for an access token and item ID
@@ -200,16 +207,14 @@ export const exchangePublicToken = async ({
       accountId: accountData.account_id,
       accessToken,
       fundingSourceUrl,
-      sharableId: encryptId(accountData.account_id),
+      shareableId: encryptId(accountData.account_id),
     });
 
     // Revalidate the path to reflect the changes
     revalidatePath("/");
 
     // Return a success message
-    return parseStringify({
-      publicTokenExchange: "complete",
-    });
+    return parseStringify({ publicTokenExchange: "complete" });
   } catch (error) {
     // Log any errors that occur during the process
     console.error("An error occurred while creating exchanging token:", error);
