@@ -8,7 +8,8 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
-  const currentPage = Number(page as string);
+  const currentPage = Number(page as string) || 1;
+
   const loggedIn = await getLoggedInUser();
   if (!loggedIn) redirect("/sign-in");
   const accounts = await getAccounts({ userId: loggedIn.$id });
@@ -45,7 +46,7 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
       </div>
       <RightSideBar
         user={loggedIn}
-        transactions={accounts?.transactions}
+        transactions={account?.transactions}
         banks={accountsData?.slice(0, 2)}
       />
     </section>
