@@ -13,7 +13,13 @@ import {
 } from "@/lib/actions/user.actions";
 import Image from "next/image";
 
-const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
+const PlaidLink = ({
+  user,
+  variant,
+  iconSize,
+  icon,
+  label,
+}: PlaidLinkProps) => {
   const router = useRouter();
 
   const [token, setToken] = useState("");
@@ -55,7 +61,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
           disabled={!ready}
           className="plaidlink-primary"
         >
-          Connect bank
+          {label || "Connect Bank"}
         </Button>
       ) : variant === "ghost" ? (
         <Button
@@ -64,24 +70,24 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
           className="plaidlink-ghost"
         >
           <Image
-            src="/icons/connect-bank.svg"
+            src={icon || "/icons/connect-bank.svg"}
             alt="connect bank"
-            width={24}
-            height={24}
+            width={iconSize || 24}
+            height={iconSize || 24}
           />
-          <p className="hidden text-[16px] font-semibold text-black-2 xl:block">
-            Connect bank
-          </p>
+          <p className="sidebar-label xl:block">{label || "Connect Bank"}</p>
         </Button>
       ) : (
         <Button onClick={() => open()} className="plaidlink-default">
           <Image
-            src="/icons/connect-bank.svg"
+            src={icon || "/icons/connect-bank.svg"}
             alt="connect bank"
-            width={24}
-            height={24}
+            width={iconSize || 24}
+            height={iconSize || 24}
           />
-          <p className="text-[16px] font-semibold text-black-2">Connect bank</p>
+          <p className="text-[16px] font-semibold text-black-2">
+            {label || "Connect Bank"}
+          </p>
         </Button>
       )}
     </>
